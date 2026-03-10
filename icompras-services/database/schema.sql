@@ -19,7 +19,6 @@ create table clients (
     phone varchar(20)
 );
 
-
 create database orders;
 
 create table orders (
