@@ -26,7 +26,7 @@ create table orders (
     client_id bigint not null,
     order_date timestamp not null default now(),
     payment_key text,
-    notes text,
+    observations text,
     status varchar(20) check (
         status in ('CREATED', 'PAID', 'INVOICED', 'SHIPPED', 'PAYMENT_ERROR', 'PREPARING_SHIPMENT')
         ),total decimal(16,2) not null,
