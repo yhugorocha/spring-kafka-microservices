@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres
+    container_name: db_icompras
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: products, clients, orders
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql
