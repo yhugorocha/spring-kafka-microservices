@@ -40,10 +40,4 @@ public class OrderController {
                                                           @Valid @RequestBody PaymentDetailsRequestDto request) {
         return ResponseEntity.ok(orderService.addNewPayment(id, request));
     }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<OrderResponseDto> updateStatus(@PathVariable("id") Long id,
-                                                         @Valid @RequestBody OrderStatusUpdateRequestDto request) {
-        return ResponseEntity.ok(orderService.updateStatus(id, request));
-    }
 }

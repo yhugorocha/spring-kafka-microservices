@@ -1,6 +1,9 @@
 package io.github.yhugorocha.orders.service.impl;
 
 import io.github.yhugorocha.orders.client.BankingServiceClient;
+import io.github.yhugorocha.orders.client.ClientsClient;
+import io.github.yhugorocha.orders.client.ProductClient;
+import io.github.yhugorocha.orders.client.representation.ClientRepresentation;
 import io.github.yhugorocha.orders.dto.*;
 import io.github.yhugorocha.orders.exception.NotProcessException;
 import io.github.yhugorocha.orders.exception.ResourceNotFoundException;
@@ -8,6 +11,8 @@ import io.github.yhugorocha.orders.model.OrderEntity;
 import io.github.yhugorocha.orders.model.OrderItemEntity;
 import io.github.yhugorocha.orders.model.enums.OrderStatus;
 import io.github.yhugorocha.orders.model.enums.PaymentType;
+import io.github.yhugorocha.orders.publisher.representantion.OrderItemRepresentation;
+import io.github.yhugorocha.orders.publisher.representantion.OrderRepresentation;
 import io.github.yhugorocha.orders.repository.OrderRepository;
 import io.github.yhugorocha.orders.service.OrderService;
 import java.math.BigDecimal;
@@ -33,6 +38,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderValidator orderValidator;
     private final BankingServiceClient bankingServiceClient;
+    private final ProductClient productClient;
+    private final ClientsClient clientsClient;
 
     @Override
     @Transactional
@@ -68,16 +75,6 @@ public class OrderServiceImpl implements OrderService {
         createdOrder.setPaymentKey(paymentKey);
     }
 
-    @Override
-    @Transactional
-    public OrderResponseDto updateStatus(Long orderId, OrderStatusUpdateRequestDto request) {
-        var order = this.findDetailedById(orderId);
-        order.setStatus(request.getStatus());
-
-        var updatedOrder = orderRepository.save(order);
-        return OrderResponseDto.fromEntity(updatedOrder);
-    }
-
     private OrderEntity findDetailedById(Long orderId) {
         return orderRepository.findDetailedById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado para o id: " + orderId));
@@ -111,5 +108,47 @@ public class OrderServiceImpl implements OrderService {
 
         order.setStatus(OrderStatus.PAYMENT_ERROR);
         order.setObservations(callback.getObservation());
+    }
+
+    public OrderRepresentation fetchCompleteOrderData(OrderEntity orderEntity){
+        var listOrderItems = this.findOrderItems(orderEntity);
+        var clientResponse = this.findClient(orderEntity.getClientId());
+
+        return OrderRepresentation.toEntity(orderEntity, clientResponse, listOrderItems);
+    }
+
+    public List<OrderItemRepresentation> findOrderItems(OrderEntity orderEntity){
+        var productIds = orderEntity.getItems().stream()
+                .map(OrderItemEntity::getProductId)
+                .toList();
+
+        var response = productClient.findAllById(productIds);
+
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new NotProcessException("Não foi possível validar os produtos do pedido");
+        }
+
+        return response.getBody().stream().map(product -> {
+            var item = orderEntity.getItems().stream()
+                    .filter(i -> i.getProductId().equals(product.id()))
+                    .findFirst()
+                    .orElseThrow(() -> new NotProcessException("Produto do pedido não encontrado: " + product.id()));
+
+            return new OrderItemRepresentation(
+                    item.getId(),
+                    product.name(),
+                    item.getQuantity(),
+                    item.getUnitPrice()
+            );
+        }).toList();
+    }
+
+    public ClientRepresentation findClient(Long id){
+        var response = clientsClient.findById(id);
+
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new NotProcessException("Não foi possível validar os produtos do pedido");
+        }
+        return response.getBody();
     }
 }
