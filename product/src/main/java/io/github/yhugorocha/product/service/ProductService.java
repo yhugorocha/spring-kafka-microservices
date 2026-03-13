@@ -33,4 +33,16 @@ public class ProductService {
                 .map(ProductResponse::fromEntity)
                 .toList();
     }
+
+    public List<ProductResponse> validateProduct(List<Long> ids) {
+        var products = productRepository.findAllById(ids);
+
+        if(ids.size() != products.size()) {
+            throw new RuntimeException("One or more products not found");
+        }
+
+        return products.stream()
+                .map(ProductResponse::fromEntity)
+                .toList();
+    }
 }

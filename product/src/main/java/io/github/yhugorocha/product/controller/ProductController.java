@@ -28,6 +28,11 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/validate")
+    public ResponseEntity<List<ProductResponse>> validateProduct(@RequestParam List<Long> ids) {
+        return ResponseEntity.ok(productService.validateProduct(ids));
+    }
+
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAllProducts() {
         return ResponseEntity.ok(productService.findAllProducts());
