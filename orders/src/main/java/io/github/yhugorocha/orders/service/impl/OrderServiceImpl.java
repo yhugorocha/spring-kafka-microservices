@@ -1,5 +1,6 @@
 package io.github.yhugorocha.orders.service.impl;
 
+import io.github.yhugorocha.orders.client.BankingServiceClient;
 import io.github.yhugorocha.orders.dto.OrderCreateRequestDto;
 import io.github.yhugorocha.orders.dto.OrderItemRequestDto;
 import io.github.yhugorocha.orders.dto.OrderResponseDto;
@@ -14,6 +15,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import io.github.yhugorocha.orders.validator.OrderValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderValidator orderValidator;
+    private final BankingServiceClient bankingServiceClient;
 
     @Override
     @Transactional
@@ -35,8 +40,15 @@ public class OrderServiceImpl implements OrderService {
         items.forEach(order::addItem);
         order.setTotal(this.calculateTotal(items));
 
+        orderValidator.validateOrder(order);
         var createdOrder = orderRepository.save(order);
+        this.submitPaymentRequest(createdOrder);
         return OrderResponseDto.fromEntity(createdOrder);
+    }
+
+    private void submitPaymentRequest(OrderEntity createdOrder) {
+        var paymentKey = bankingServiceClient.RequestPayment(createdOrder);
+        createdOrder.setPaymentKey(paymentKey);
     }
 
     @Override
