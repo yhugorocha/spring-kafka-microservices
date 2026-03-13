@@ -1,10 +1,8 @@
 package io.github.yhugorocha.orders.service.impl;
 
 import io.github.yhugorocha.orders.client.BankingServiceClient;
-import io.github.yhugorocha.orders.dto.OrderCreateRequestDto;
-import io.github.yhugorocha.orders.dto.OrderItemRequestDto;
-import io.github.yhugorocha.orders.dto.OrderResponseDto;
-import io.github.yhugorocha.orders.dto.OrderStatusUpdateRequestDto;
+import io.github.yhugorocha.orders.dto.*;
+import io.github.yhugorocha.orders.exception.NotProcessException;
 import io.github.yhugorocha.orders.exception.ResourceNotFoundException;
 import io.github.yhugorocha.orders.model.OrderEntity;
 import io.github.yhugorocha.orders.model.OrderItemEntity;
@@ -15,16 +13,22 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.yhugorocha.orders.validator.OrderValidator;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
+    @Value("${icompras.order.api.key}")
+    private String apiKey;
     private final OrderRepository orderRepository;
     private final OrderValidator orderValidator;
     private final BankingServiceClient bankingServiceClient;
@@ -71,5 +75,28 @@ public class OrderServiceImpl implements OrderService {
                 .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, RoundingMode.HALF_UP);
+    }
+
+    @Transactional
+    @Override
+    public void processPaymentCallback(CallBackPaymentDto callback, String apiKey) {
+        if (!Objects.equals(this.apiKey, apiKey)) {
+            log.info("Chave de API inválida para callback de pagamento: {}", apiKey);
+            throw new NotProcessException("Não foi possível processar o pagamento");
+        }
+
+        var order = orderRepository.findByIdAndPaymentKey(callback.getId(), callback.getPaymentKey())
+                .orElseThrow(() -> new NotProcessException(
+                        "Pedido não encontrado para a chave de pagamento: " + callback.getPaymentKey()
+                ));
+
+        if (callback.isStatus()) {
+            order.setStatus(OrderStatus.PAID);
+            order.setObservations(null);
+            return;
+        }
+
+        order.setStatus(OrderStatus.PAYMENT_ERROR);
+        order.setObservations(callback.getObservation());
     }
 }

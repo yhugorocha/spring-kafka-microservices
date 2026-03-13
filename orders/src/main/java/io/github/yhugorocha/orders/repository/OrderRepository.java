@@ -10,4 +10,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
     @EntityGraph(attributePaths = "items")
     Optional<OrderEntity> findDetailedById(Long id);
+
+    Optional<OrderEntity> findByIdAndPaymentKey(Long id, String paymentKey);
 }
