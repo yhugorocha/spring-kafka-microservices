@@ -1,8 +1,9 @@
-package io.github.yhugorocha.orders.resource;
+package io.github.yhugorocha.orders.controller;
 
 import io.github.yhugorocha.orders.dto.OrderCreateRequestDto;
 import io.github.yhugorocha.orders.dto.OrderResponseDto;
 import io.github.yhugorocha.orders.dto.OrderStatusUpdateRequestDto;
+import io.github.yhugorocha.orders.dto.PaymentDetailsRequestDto;
 import io.github.yhugorocha.orders.service.OrderService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -19,7 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api/v1/orders")
 @AllArgsConstructor
-public class OrderResource {
+public class OrderController {
 
     private final OrderService orderService;
 
@@ -32,6 +33,12 @@ public class OrderResource {
                 .toUri();
 
         return ResponseEntity.created(location).body(createdOrder);
+    }
+
+    @PatchMapping("/new-payment/{id}")
+    public ResponseEntity<OrderResponseDto> updatePayment(@PathVariable("id") Long id,
+                                                          @Valid @RequestBody PaymentDetailsRequestDto request) {
+        return ResponseEntity.ok(orderService.addNewPayment(id, request));
     }
 
     @PatchMapping("/{id}/status")

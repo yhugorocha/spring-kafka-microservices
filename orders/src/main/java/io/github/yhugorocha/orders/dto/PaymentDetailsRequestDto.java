@@ -17,5 +17,5 @@ public class PaymentDetailsRequestDto {
     private String details;
 
     @NotEmpty(message = "paymentType é obrigatório")
-    private PaymentType paymentType;
+    private String paymentType;
 }

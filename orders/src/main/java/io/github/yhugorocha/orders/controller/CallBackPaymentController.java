@@ -1,4 +1,4 @@
-package io.github.yhugorocha.orders.resource;
+package io.github.yhugorocha.orders.controller;
 
 import io.github.yhugorocha.orders.dto.CallBackPaymentDto;
 import io.github.yhugorocha.orders.service.OrderService;

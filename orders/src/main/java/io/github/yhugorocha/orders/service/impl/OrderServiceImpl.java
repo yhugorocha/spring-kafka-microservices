@@ -7,6 +7,7 @@ import io.github.yhugorocha.orders.exception.ResourceNotFoundException;
 import io.github.yhugorocha.orders.model.OrderEntity;
 import io.github.yhugorocha.orders.model.OrderItemEntity;
 import io.github.yhugorocha.orders.model.enums.OrderStatus;
+import io.github.yhugorocha.orders.model.enums.PaymentType;
 import io.github.yhugorocha.orders.repository.OrderRepository;
 import io.github.yhugorocha.orders.service.OrderService;
 import java.math.BigDecimal;
@@ -48,6 +49,18 @@ public class OrderServiceImpl implements OrderService {
         var createdOrder = orderRepository.save(order);
         this.submitPaymentRequest(createdOrder);
         return OrderResponseDto.fromEntity(createdOrder);
+    }
+
+    @Transactional
+    public OrderResponseDto addNewPayment(Long id, PaymentDetailsRequestDto paymentDetails) {
+        var order = this.findDetailedById(id);
+        order.setDetails(paymentDetails.getDetails());
+        order.setPaymentType(PaymentType.valueOf(paymentDetails.getPaymentType()));
+        order.setStatus(OrderStatus.CREATED);
+        order.setObservations(null);
+        this.submitPaymentRequest(order);
+        orderRepository.save(order);
+        return OrderResponseDto.fromEntity(order);
     }
 
     private void submitPaymentRequest(OrderEntity createdOrder) {

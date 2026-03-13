@@ -1,9 +1,6 @@
 package io.github.yhugorocha.orders.service;
 
-import io.github.yhugorocha.orders.dto.CallBackPaymentDto;
-import io.github.yhugorocha.orders.dto.OrderCreateRequestDto;
-import io.github.yhugorocha.orders.dto.OrderResponseDto;
-import io.github.yhugorocha.orders.dto.OrderStatusUpdateRequestDto;
+import io.github.yhugorocha.orders.dto.*;
 
 public interface OrderService {
 
@@ -12,4 +9,6 @@ public interface OrderService {
     OrderResponseDto updateStatus(Long orderId, OrderStatusUpdateRequestDto request);
 
     void processPaymentCallback(CallBackPaymentDto callBackPaymentDto, String apiKey);
+
+    OrderResponseDto addNewPayment(Long id, PaymentDetailsRequestDto request);
 }

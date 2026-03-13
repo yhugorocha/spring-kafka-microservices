@@ -1,6 +1,7 @@
 package io.github.yhugorocha.orders.dto;
 
 import io.github.yhugorocha.orders.model.OrderEntity;
+import io.github.yhugorocha.orders.model.enums.PaymentType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +30,8 @@ public class OrderCreateRequestDto {
     public OrderEntity toEntity() {
         return OrderEntity.builder()
                 .clientId(this.clientId)
+                .details(this.paymentDetails.getDetails())
+                .paymentType(PaymentType.valueOf(this.paymentDetails.getPaymentType()))
                 .build();
     }
 }

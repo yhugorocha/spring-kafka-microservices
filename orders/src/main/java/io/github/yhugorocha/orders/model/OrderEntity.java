@@ -1,16 +1,9 @@
 package io.github.yhugorocha.orders.model;
 
 import io.github.yhugorocha.orders.model.enums.OrderStatus;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import io.github.yhugorocha.orders.model.enums.PaymentType;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -64,6 +57,12 @@ public class OrderEntity {
     @Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemEntity> items = new ArrayList<>();
+
+    @Transient
+    private String details;
+
+    @Transient
+    private PaymentType paymentType;
 
     public void addItem(OrderItemEntity item) {
         this.items.add(item);
