@@ -1,8 +1,8 @@
-package io.github.yhugorocha.orders.publisher.representantion;
+package io.github.yhugorocha.invoicing.model;
 
 import java.math.BigDecimal;
 
-public record OrderItemRepresentation(
+public record OrderItem(
         Long id,
         String name,
         Integer quantity,
