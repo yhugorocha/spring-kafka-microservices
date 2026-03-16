@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ClientsClient {
 
     @GetMapping("/{id}")
-    ResponseEntity<ClientRepresentation> findById(@PathVariable Long id);
+    ResponseEntity<ClientRepresentation> findById(@PathVariable("id") Long id);
 
 }

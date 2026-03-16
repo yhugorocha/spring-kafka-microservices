@@ -7,5 +7,5 @@ public record ClientRepresentation(Long id,
                                    String number,
                                    String neighborhood,
                                    String email,
-                                   String phoneNumber) {
+                                   String phone) {
 }

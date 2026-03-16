@@ -37,7 +37,7 @@ public record OrderRepresentation(
                 clientRepresentation.number(),
                 clientRepresentation.neighborhood(),
                 clientRepresentation.email(),
-                clientRepresentation.phoneNumber(),
+                clientRepresentation.phone(),
                 orderEntity.getTotal(),
                 orderEntity.getStatus(),
                 items
