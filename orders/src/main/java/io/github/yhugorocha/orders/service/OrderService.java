@@ -1,6 +1,7 @@
 package io.github.yhugorocha.orders.service;
 
 import io.github.yhugorocha.orders.dto.*;
+import io.github.yhugorocha.orders.publisher.representantion.OrderRepresentation;
 
 public interface OrderService {
 
@@ -9,4 +10,6 @@ public interface OrderService {
     void processPaymentCallback(CallBackPaymentDto callBackPaymentDto, String apiKey);
 
     OrderResponseDto addNewPayment(Long id, PaymentDetailsRequestDto request);
+
+    OrderRepresentation orderInformationById(Long id);
 }

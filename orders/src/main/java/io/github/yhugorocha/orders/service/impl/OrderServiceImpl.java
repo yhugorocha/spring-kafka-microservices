@@ -11,6 +11,7 @@ import io.github.yhugorocha.orders.model.OrderEntity;
 import io.github.yhugorocha.orders.model.OrderItemEntity;
 import io.github.yhugorocha.orders.model.enums.OrderStatus;
 import io.github.yhugorocha.orders.model.enums.PaymentType;
+import io.github.yhugorocha.orders.publisher.PaymentPublisher;
 import io.github.yhugorocha.orders.publisher.representantion.OrderItemRepresentation;
 import io.github.yhugorocha.orders.publisher.representantion.OrderRepresentation;
 import io.github.yhugorocha.orders.repository.OrderRepository;
@@ -40,6 +41,7 @@ public class OrderServiceImpl implements OrderService {
     private final BankingServiceClient bankingServiceClient;
     private final ProductClient productClient;
     private final ClientsClient clientsClient;
+    private final PaymentPublisher paymentPublisher;
 
     @Override
     @Transactional
@@ -103,11 +105,17 @@ public class OrderServiceImpl implements OrderService {
         if (callback.isStatus()) {
             order.setStatus(OrderStatus.PAID);
             order.setObservations(null);
+            paymentPublisher.publisher(this.fetchCompleteOrderData(order));
             return;
         }
 
         order.setStatus(OrderStatus.PAYMENT_ERROR);
         order.setObservations(callback.getObservation());
+    }
+
+    @Override
+    public OrderRepresentation orderInformationById(Long id) {
+        return this.fetchCompleteOrderData(this.findDetailedById(id));
     }
 
     public OrderRepresentation fetchCompleteOrderData(OrderEntity orderEntity){
