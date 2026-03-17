@@ -21,7 +21,7 @@ public class OrderPaidSubscriber {
         try {
             log.info("Received order paid event: {}", json);
             var order = objectMapper.readValue(json, OrderRepresentation.class);
-            invoiceService.buildInvoice(OrderRepresentation.toEntity(order));
+            invoiceService.generateInvoice(OrderRepresentation.toEntity(order));
         } catch (Exception e) {
             log.error("Error processing order paid event", e);
         }
