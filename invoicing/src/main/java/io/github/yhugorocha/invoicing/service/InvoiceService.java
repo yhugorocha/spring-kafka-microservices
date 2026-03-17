@@ -3,6 +3,9 @@ package io.github.yhugorocha.invoicing.service;
 import io.github.yhugorocha.invoicing.bucket.BucketFile;
 import io.github.yhugorocha.invoicing.bucket.BucketService;
 import io.github.yhugorocha.invoicing.model.Order;
+import io.github.yhugorocha.invoicing.publisher.InvoicePublisher;
+import io.github.yhugorocha.invoicing.publisher.representantion.OrderStatus;
+import io.github.yhugorocha.invoicing.publisher.representantion.StatusUpdateOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
@@ -34,6 +37,7 @@ public class InvoiceService {
     private Resource pago;
 
     private final BucketService bucketService;
+    private final InvoicePublisher invoicePublisher;
 
     public void generateInvoice(Order order) {
         try {
@@ -42,6 +46,9 @@ public class InvoiceService {
 
             bucketService.upload(new BucketFile(fileName, new ByteArrayInputStream(pdfBytes),
                     MediaType.APPLICATION_PDF, pdfBytes.length));
+
+            var invoiceUrl = bucketService.getUrl(fileName);
+            invoicePublisher.publisher(new StatusUpdateOrder(order.id(), OrderStatus.INVOICED, invoiceUrl));
         } catch (Exception e) {
             log.error("Error generating invoice for order id: {}", order.id(), e);
             throw new RuntimeException(e);

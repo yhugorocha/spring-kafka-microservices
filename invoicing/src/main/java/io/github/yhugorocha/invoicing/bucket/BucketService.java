@@ -42,7 +42,7 @@ public class BucketService {
                             .method(Method.GET)
                             .bucket(minioProps.getBucketName())
                             .object(fileName)
-                            .expiry(1, TimeUnit.HOURS)
+                            .expiry(7, TimeUnit.DAYS)
                             .build()
             );
         } catch (Exception e) {
