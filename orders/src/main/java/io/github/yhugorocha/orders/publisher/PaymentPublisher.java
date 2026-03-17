@@ -2,7 +2,7 @@ package io.github.yhugorocha.orders.publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.yhugorocha.orders.publisher.representantion.OrderRepresentation;
+import io.github.yhugorocha.orders.publisher.representation.OrderRepresentation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

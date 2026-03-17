@@ -3,7 +3,7 @@ package io.github.yhugorocha.orders.controller;
 import io.github.yhugorocha.orders.dto.OrderCreateRequestDto;
 import io.github.yhugorocha.orders.dto.OrderResponseDto;
 import io.github.yhugorocha.orders.dto.PaymentDetailsRequestDto;
-import io.github.yhugorocha.orders.publisher.representantion.OrderRepresentation;
+import io.github.yhugorocha.orders.publisher.representation.OrderRepresentation;
 import io.github.yhugorocha.orders.service.OrderService;
 import jakarta.validation.Valid;
 import java.net.URI;

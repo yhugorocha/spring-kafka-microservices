@@ -1,4 +1,4 @@
-package io.github.yhugorocha.invoicing.subscriber.representantion;
+package io.github.yhugorocha.invoicing.subscriber.representation;
 
 import io.github.yhugorocha.invoicing.model.Client;
 import io.github.yhugorocha.invoicing.model.Order;

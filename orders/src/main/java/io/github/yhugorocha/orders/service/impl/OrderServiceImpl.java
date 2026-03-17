@@ -12,8 +12,8 @@ import io.github.yhugorocha.orders.model.OrderItemEntity;
 import io.github.yhugorocha.orders.model.enums.OrderStatus;
 import io.github.yhugorocha.orders.model.enums.PaymentType;
 import io.github.yhugorocha.orders.publisher.PaymentPublisher;
-import io.github.yhugorocha.orders.publisher.representantion.OrderItemRepresentation;
-import io.github.yhugorocha.orders.publisher.representantion.OrderRepresentation;
+import io.github.yhugorocha.orders.publisher.representation.OrderItemRepresentation;
+import io.github.yhugorocha.orders.publisher.representation.OrderRepresentation;
 import io.github.yhugorocha.orders.repository.OrderRepository;
 import io.github.yhugorocha.orders.service.OrderService;
 import java.math.BigDecimal;
@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateOrder;
 import io.github.yhugorocha.orders.validator.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -158,5 +159,16 @@ public class OrderServiceImpl implements OrderService {
             throw new NotProcessException("Não foi possível validar os produtos do pedido");
         }
         return response.getBody();
+    }
+
+    @Transactional
+    @Override
+    public void invoiceOrder(StatusUpdateOrder updateOrder) {
+        var order = orderRepository.findById(updateOrder.id())
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado para o id: " + updateOrder.id()));
+
+        order.setStatus(updateOrder.orderStatus());
+        order.setInvoiceUrl(updateOrder.invoiceUrl());
+        orderRepository.save(order);
     }
 }

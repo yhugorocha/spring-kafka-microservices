@@ -1,7 +1,8 @@
 package io.github.yhugorocha.orders.service;
 
 import io.github.yhugorocha.orders.dto.*;
-import io.github.yhugorocha.orders.publisher.representantion.OrderRepresentation;
+import io.github.yhugorocha.orders.publisher.representation.OrderRepresentation;
+import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateOrder;
 
 public interface OrderService {
 
@@ -12,4 +13,6 @@ public interface OrderService {
     OrderResponseDto addNewPayment(Long id, PaymentDetailsRequestDto request);
 
     OrderRepresentation orderInformationById(Long id);
+
+    void invoiceOrder(StatusUpdateOrder updateOrder);
 }

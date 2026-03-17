@@ -1,4 +1,4 @@
-package io.github.yhugorocha.orders.publisher.representantion;
+package io.github.yhugorocha.orders.publisher.representation;
 
 import io.github.yhugorocha.orders.client.representation.ClientRepresentation;
 import io.github.yhugorocha.orders.model.OrderEntity;

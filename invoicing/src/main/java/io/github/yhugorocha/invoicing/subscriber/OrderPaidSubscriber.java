@@ -2,7 +2,7 @@ package io.github.yhugorocha.invoicing.subscriber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.yhugorocha.invoicing.service.InvoiceService;
-import io.github.yhugorocha.invoicing.subscriber.representantion.OrderRepresentation;
+import io.github.yhugorocha.invoicing.subscriber.representation.OrderRepresentation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

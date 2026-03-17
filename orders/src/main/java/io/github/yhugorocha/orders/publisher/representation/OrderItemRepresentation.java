@@ -1,4 +1,4 @@
-package io.github.yhugorocha.orders.publisher.representantion;
+package io.github.yhugorocha.orders.publisher.representation;
 
 import java.math.BigDecimal;
 
