@@ -6,9 +6,6 @@ public record OrderItem(
         Long id,
         String name,
         Integer quantity,
-        BigDecimal unitPrice
-) {
-    public BigDecimal getTotal(){
-        return unitPrice.multiply(BigDecimal.valueOf(quantity));
-    }
-}
+        BigDecimal unitPrice,
+        BigDecimal total
+) {}

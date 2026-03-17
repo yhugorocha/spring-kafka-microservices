@@ -18,7 +18,7 @@ public record OrderRepresentation(
         String number,
         String neighborhood,
         String email,
-        String phoneNumber,
+        String phone,
         BigDecimal total,
         OrderStatus status,
         List<OrderItemRepresentation> items

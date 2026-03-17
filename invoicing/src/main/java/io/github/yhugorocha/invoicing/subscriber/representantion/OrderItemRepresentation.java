@@ -9,18 +9,16 @@ public record OrderItemRepresentation(
         Long id,
         String name,
         Integer quantity,
-        BigDecimal unitPrice
+        BigDecimal unitPrice,
+        BigDecimal total
 ) {
-    public BigDecimal getTotal(){
-        return unitPrice.multiply(BigDecimal.valueOf(quantity));
-    }
-
     public static OrderItem toEntity(OrderItemRepresentation representation){
         return new OrderItem(
                 representation.id,
                 representation.name,
                 representation.quantity,
-                representation.unitPrice
+                representation.unitPrice,
+                representation.total
         );
     }
 

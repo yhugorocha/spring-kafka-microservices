@@ -6,15 +6,9 @@ import java.util.List;
 
 public record Order(
         Long id,
-        Long clientId,
+        Client client,
         LocalDateTime orderDate,
-        String name,
-        String cpf,
-        String street,
-        String number,
-        String neighborhood,
-        String email,
-        String phoneNumber,
         BigDecimal total,
+        String status,
         List<OrderItem> items
 ) {}
