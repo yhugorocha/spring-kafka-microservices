@@ -22,7 +22,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateOrder;
+import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateInvoiceOrder;
+import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateLogisticsOrder;
 import io.github.yhugorocha.orders.validator.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -163,12 +164,23 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void invoiceOrder(StatusUpdateOrder updateOrder) {
+    public void invoiceOrder(StatusUpdateInvoiceOrder updateOrder) {
         var order = orderRepository.findById(updateOrder.id())
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado para o id: " + updateOrder.id()));
 
         order.setStatus(updateOrder.orderStatus());
         order.setInvoiceUrl(updateOrder.invoiceUrl());
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    @Override
+    public void shippedOrder(StatusUpdateLogisticsOrder updateOrder) {
+        var order = orderRepository.findById(updateOrder.id())
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado para o id: " + updateOrder.id()));
+
+        order.setStatus(updateOrder.orderStatus());
+        order.setTrackingCode(updateOrder.trackingNumber());
         orderRepository.save(order);
     }
 }

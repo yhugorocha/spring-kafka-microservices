@@ -2,7 +2,7 @@ package io.github.yhugorocha.orders.subscriber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.yhugorocha.orders.service.OrderService;
-import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateOrder;
+import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateInvoiceOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -20,7 +20,7 @@ public class OrderInvoiceSubscriber {
     public void listen(String json) {
         try {
             log.info("Received order invoiced event: {}", json);
-            var updateOrder = objectMapper.readValue(json, StatusUpdateOrder.class);
+            var updateOrder = objectMapper.readValue(json, StatusUpdateInvoiceOrder.class);
             orderService.invoiceOrder(updateOrder);
             log.info("Processed order invoiced event for order ID: {}", updateOrder.id());
         } catch (Exception e) {

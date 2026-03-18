@@ -2,7 +2,8 @@ package io.github.yhugorocha.orders.service;
 
 import io.github.yhugorocha.orders.dto.*;
 import io.github.yhugorocha.orders.publisher.representation.OrderRepresentation;
-import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateOrder;
+import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateInvoiceOrder;
+import io.github.yhugorocha.orders.subscriber.representation.StatusUpdateLogisticsOrder;
 
 public interface OrderService {
 
@@ -14,5 +15,7 @@ public interface OrderService {
 
     OrderRepresentation orderInformationById(Long id);
 
-    void invoiceOrder(StatusUpdateOrder updateOrder);
+    void invoiceOrder(StatusUpdateInvoiceOrder updateOrder);
+
+    void shippedOrder (StatusUpdateLogisticsOrder updateOrder);
 }
