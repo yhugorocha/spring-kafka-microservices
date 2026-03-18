@@ -6,17 +6,7 @@ O fluxo principal cobre cadastro de clientes e produtos, criacao de pedidos, sim
 
 ## Diagrama da arquitetura
 
-Use esta secao para adicionar a imagem da arquitetura no GitHub.
-
-Exemplo de como referenciar a imagem:
-
-```md
-![Arquitetura da solucao](./docs/arquitetura.png)
-```
-
-Sugestao:
-- salve a imagem em `docs/arquitetura.png`
-- substitua o bloco acima pela tag Markdown definitiva quando quiser exibir a imagem no README
+<img width="1244" height="910" alt="image" src="https://github.com/user-attachments/assets/4c2a0d90-75a6-4bfc-b8bb-a4fb4fc983a6" />
 
 ## Visao geral da arquitetura
 
